@@ -42,11 +42,15 @@ class C_unitConversion extends Controller
             return respons(400,  $validator->errors()->all()[0]);
         }
 
-        $data = unitConversion::create([
-            'fromUnit'  => $request->fromUnit,
-            'toUnit'    => $request->toUnit,
-            'ratio'     => $request->ratio,
-        ]);
+        $unitConversion = new unitConversion;
+
+        $unitConversion->fromUnit = $request->fromUnit;
+        $unitConversion->toUnit = $request->toUnit;
+        $unitConversion->ratio = $request->ratio;
+
+        $unitConversion->save();
+
+        $data=$unitConversion;
 
         return respons(200,'Data has been saved',$data);
     }

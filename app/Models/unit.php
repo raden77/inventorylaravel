@@ -23,9 +23,14 @@ class unit extends Model
         return $this->hasMany(product::class,'unitId');
     }
 
-    public function unitConversions():HasMany
+    public function fromUnit():HasMany
     {
         return $this->hasMany(unitConversion::class, 'fromUnit', 'unitId');
+    }
+
+    public function toUnit():HasMany
+    {
+        return $this->hasMany(unitConversion::class, 'toUnit', 'unitId');
     }
 
 }
