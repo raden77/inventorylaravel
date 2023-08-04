@@ -9,7 +9,6 @@
 </li>
 @php
     $userdata= session('userdata');
-    // $list=$menus->with('submenus')->get();
 
     $listsubmenu=$userMenu->with('User:id,name','subMenu:subMenusId,subMenuName')
                 ->where('id',$userdata['id'])->get();
@@ -21,6 +20,7 @@
 
     $setmenu = $menus->select('menus.*', 'submenus.*')
                         ->join('submenus', 'menus.menuId', '=', 'submenus.menuId')
+                        ->where('submenus.tipeMenu', 1)
                         ->whereIn('submenus.subMenusId', $datasubmenu)
                         ->orderBy('menus.menuId')
                         ->get();

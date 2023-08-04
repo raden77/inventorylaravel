@@ -4,15 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\purchase;
-use App\Models\suppliers;
+use App\Models\unit;
 use Validator;
 use DB;
-
-class C_purchase extends Controller
+class C_purchasedetail extends Controller
 {
     public function index(Request $request)
     {
-        CheckMenuRole($request->getRequestUri());
+        // dd($request->route()->uri());
+        // dd($request->getRequestUri());
+
+        $url=$request->route()->uri();
+        // dd($url);
+        CheckMenuRole($url);
 
         $d['supplier']=suppliers::pluck('supplierName','supplierId')->all();
 
@@ -68,14 +72,14 @@ class C_purchase extends Controller
         ];
 
         $validator = Validator::make($request->all(), [
-            "purchaseId" => "required",
+            "productId" => "required",
         ], $messages);
 
         if ($validator->fails()) {
             return respons(400,  $validator->errors()->all()[0]);
         }
 
-        $data = purchase::find($request->purchaseId);
+        $data = purchase::find($request->productId);
 
         if($data){
             $data->delete();
@@ -94,23 +98,35 @@ class C_purchase extends Controller
         ];
 
         $validator = Validator::make($request->all(), [
-            'purchaseId' => 'required',
-            'kodePurchase' => 'required',
-            'supplierId' => 'required',
-            'description' => 'required',
+            'productId'         => "required",
+            'productPriceId'    => "required",
+            'productName'       => "required",
+            'dimension'         => "required",
+            'qty'               => "required|numeric",
+            'productCategoriId' => "required",
+            'unitId'            => "required",
+            'price'             => "required|numeric"
         ], $messages);
 
         if ($validator->fails()) {
             return respons(400,  $validator->errors()->all()[0]);
         }
 
-        $data = purchase::where('purchaseId', $request->purchaseId)
+        $data = purchase::where('productId', $request->productId)
                 ->update([
-                    'kodePurchase' => $request->kodePurchase,
-                    'supplierId' => $request->supplierId,
-                    'description' => $request->description,
+                    'productName' => $request->productName,
+                    'dimensions' => $request->dimension,
+                    'qty' => $request->qty,
+                    'productCategoriId' => $request->productCategoriId,
+                    'unitId' => $request->unitId
                 ]);
 
+        //Update kolom producPriceId
+        $updateProductPrice = productPrice::where('productId', $request->productId)
+                                ->where('productPriceId', $request->productPriceId)
+                                ->update([
+                                    'price' => $request->price,
+                                ]);
 
         if($data){
             return respons(200,'Data has been updated',$data);

@@ -54,11 +54,11 @@ Route::group(['middleware' => 'checkAuthAndRole'], function () {
     Route::post('/deleteDataUnit', [App\Http\Controllers\C_productunit::class, 'deleteDataUnit'])->name('deleteDataUnit');
     Route::post('/updateDataUnit', [App\Http\Controllers\C_productunit::class, 'updateDataUnit'])->name('updateDataUnit');
 
-    Route::get('/purchase', [App\Http\Controllers\C_productunit::class, 'index'])->name('purchase');
-    Route::get('/listDataPurchase', [App\Http\Controllers\C_productunit::class, 'listDataPurchase'])->name('listDataPurchase');
-    Route::post('/addDataPurchase', [App\Http\Controllers\C_productunit::class, 'addDataPurchase'])->name('addDataPurchase');
-    Route::post('/deleteDataPurchase', [App\Http\Controllers\C_productunit::class, 'deleteDataPurchase'])->name('deleteDataPurchase');
-    Route::post('/updateDataPurchase', [App\Http\Controllers\C_productunit::class, 'updateDataPurchase'])->name('updateDataPurchase');
+    Route::get('/purchase', [App\Http\Controllers\C_purchase::class, 'index'])->name('purchase');
+    Route::get('/listDataPurchase', [App\Http\Controllers\C_purchase::class, 'listDataPurchase'])->name('listDataPurchase');
+    Route::post('/addDataPurchase', [App\Http\Controllers\C_purchase::class, 'addDataPurchase'])->name('addDataPurchase');
+    Route::post('/deleteDataPurchase', [App\Http\Controllers\C_purchase::class, 'deleteDataPurchase'])->name('deleteDataPurchase');
+    Route::post('/updateDataPurchase', [App\Http\Controllers\C_purchase::class, 'updateDataPurchase'])->name('updateDataPurchase');
 
     Route::get('/user', [App\Http\Controllers\C_user::class, 'index'])->name('user');
     Route::get('/listDataUser', [App\Http\Controllers\C_user::class, 'listDataUser'])->name('listDataUser');
@@ -77,6 +77,18 @@ Route::group(['middleware' => 'checkAuthAndRole'], function () {
     Route::post('/addDataUnitConversion', [App\Http\Controllers\C_unitConversion::class, 'addDataUnitConversion'])->name('addDataUnitConversion');
     Route::post('/deleteDataUnitConversion', [App\Http\Controllers\C_unitConversion::class, 'deleteDataUnitConversion'])->name('deleteDataUnitConversion');
     Route::post('/updateDataUnitConversion', [App\Http\Controllers\C_unitConversion::class, 'updateDataUnitConversion'])->name('updateDataUnitConversion');
+
+    Route::get('/suppliers', [App\Http\Controllers\C_supplier::class, 'index'])->name('suppliers');
+    Route::get('/listDataSuppliers', [App\Http\Controllers\C_supplier::class, 'listDataSuppliers'])->name('listDataSuppliers');
+    Route::post('/addDataSuppliers', [App\Http\Controllers\C_supplier::class, 'addDataSuppliers'])->name('addDataSuppliers');
+    Route::post('/deleteDataSuppliers', [App\Http\Controllers\C_supplier::class, 'deleteDataSuppliers'])->name('deleteDataSuppliers');
+    Route::post('/updateDataSuppliers', [App\Http\Controllers\C_supplier::class, 'updateDataSuppliers'])->name('updateDataSuppliers');
+
+    Route::get('/purchase/detail/{purchaseId}', [App\Http\Controllers\C_purchasedetail::class, 'index'])->name('purchase-detail');
+    Route::get('/purchase/detail/listDataPurchase', [App\Http\Controllers\C_purchasedetail::class, 'listDataPurchase'])->name('detail-listDataPurchase');
+    Route::post('/purchase/detail/addDataPurchase', [App\Http\Controllers\C_purchasedetail::class, 'addDataPurchase'])->name('detail-addDataPurchase');
+    Route::post('/purchase/detail/deleteDataPurchase', [App\Http\Controllers\C_purchasedetail::class, 'deleteDataPurchase'])->name('detail-deleteDataPurchase');
+    Route::post('/purchase/detail/updateDataPurchase', [App\Http\Controllers\C_purchasedetail::class, 'updateDataPurchase'])->name('detail-updateDataPurchase');
 
 });
 
