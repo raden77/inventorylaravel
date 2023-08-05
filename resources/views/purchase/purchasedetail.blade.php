@@ -1,36 +1,86 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $statusinfo='';
+
+    if($purchaseinfo->status==1){
+        $statusinfo='Open';
+    }else if($purchaseinfo->status==2){
+        $statusinfo='Checking';
+    }else if($purchaseinfo->status==3){
+        $statusinfo='Checked';
+    }else if($purchaseinfo->status==4){
+        $statusinfo='Ongoing';
+    }else if($purchaseinfo->status==5){
+        $statusinfo='Close';
+    }
+@endphp
     <div class="container-fluid">
-        <h3 class="text-black-50">Product Management</h3>
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#productAdd">
-          <i class="fa fa-plus"></i>  Add
-        </button>
+        <h3 class="text-black-50">Purchase Detail</h3>
+        <div class="card">
+            <div class="card-header">
+                <h6 class="text-end">Status&nbsp;:&nbsp;<span class="badge bg-primary">{{$statusinfo}}</span></h6>
+            </div>
+            <div class="card-body">
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="table-responsive">
-                    <table id="tableProduct" class="table table-hover table-bordered" width="100%" style="font-size: 13px">
-                        <thead>
-                            <tr class="text-center bg-primary">
-                                <th class="text-center">No</th>
-                                <th class="text-center">Nama Product</th>
-                                <th class="text-center">Dimensi</th>
-                                <th class="text-center">Categori</th>
-                                <th class="text-center">Satuan</th>
-                                <th class="text-center">Qty</th>
-                                <th class="text-center">Harga</th>
-                                <th class="text-center">Action</th>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <th width="140">Kode Purchase</th>
+                                <td width="10">:</td>
+                                <td>{{$purchaseinfo->kodePurchase}}</td>
                             </tr>
-                        </thead>
-                        <tbody>
+                            <tr>
+                                <th>Supplier</th>
+                                <td>:</td>
+                                <td>{{$purchaseinfo->supplier->supplierName}}</td>
+                            </tr>
 
-                        </tbody>
-                    </table>
+                        </table>
+                    </div>
+                    <div class="col-sm-6">
+                        <table  class="table table-borderless">
+                            <tr>
+                                <th width="140">Description</th>
+                                <td width="10">:</td>
+                                <td>{{$purchaseinfo->description}}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+                <hr class="bg-dark">
+                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#productAdd">
+                    <i class="fa fa-plus"></i>  Add
+                </button>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="tableset" class="table table-hover table-bordered" width="100%" style="font-size: 13px">
+                                <thead>
+                                    <tr class="text-center bg-primary">
+                                        <th class="text-center">No</th>
+                                        <th class="text-center">Nama Product</th>
+                                        <th class="text-center">Satuan</th>
+                                        <th class="text-center">Qty</th>
+                                        <th class="text-center">Harga</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
+
 
         <!-- Modal -->
         <div class="modal fade" id="productAdd" tabindex="-1" aria-labelledby="productAddLabel" aria-hidden="true">
@@ -45,46 +95,7 @@
                                 <div class="col-sm-23">
                                     <form action="#" id="formadd">
                                         @csrf
-                                        <div class="form-group row">
-                                            <div class="col-sm-3">
-                                                <label for="">Name Product</label>
-                                            </div>
-                                            <div class="col-sm-9">
-                                               <input type="text" id="productName" name="productName" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-sm-3">
-                                                <label for="">Dimension</label>
-                                            </div>
-                                            <div class="col-sm-5">
-                                                <input type="text" id="dimension" name="dimension" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-sm-3">
-                                                <label for="">Qty</label>
-                                            </div>
-                                            <div class="col-sm-5">
-                                                <input type="number" id="qty" name="qty" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-sm-3">
-                                                <label for="">Categori</label>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <select name="productCategoriId" id="productCategoriId"
-                                                    class="form-control select2" >
-                                                    <option value="0" disabled selected>Pilih</option>
-                                                    @forelse ($categori as $key=>$item)
-                                                        <option value="{{$key}}">{{$item}}</option>
-                                                    @empty
-                                                        <option value="0" disabled>Data Not Found</option>
-                                                    @endforelse
-                                                </select>
-                                            </div>
-                                        </div>
+
                                         <div class="form-group row">
                                             <div class="col-sm-3">
                                                 <label for="">Unit</label>
@@ -138,38 +149,7 @@
                                     @csrf
                                     <input type="hidden" name="productId" id="productId_e">
                                     <input type="hidden" name="productPriceId" id="productPriceId_e">
-                                    <div class="form-group row">
-                                        <div class="col-sm-3">
-                                            <label for="">Name Product</label>
-                                        </div>
-                                        <div class="col-sm-9">
-                                           <input type="text" id="productName_e" name="productName" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-sm-3">
-                                            <label for="">Dimension</label>
-                                        </div>
-                                        <div class="col-sm-5">
-                                            <input type="text" id="dimension_e" name="dimension" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-sm-3">
-                                            <label for="">Categori</label>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <select name="productCategoriId" id="productCategoriId_e"
-                                                class="form-control select2" >
-                                                <option value="0" disabled>Pilih</option>
-                                                @forelse ($categori as $key=>$item)
-                                                    <option value="{{$key}}">{{$item}}</option>
-                                                @empty
-                                                    <option value="0" disabled>Data Not Found</option>
-                                                @endforelse
-                                            </select>
-                                        </div>
-                                    </div>
+
                                     <div class="form-group row">
                                         <div class="col-sm-3">
                                             <label for="">Unit</label>
@@ -222,19 +202,17 @@
 @section('script')
 <script>
    let table;
-
+   let purchaseId="{{$purchaseId}}";
     $(document).ready(function () {
 
-        table = $('#tableProduct').DataTable({
+        table = $('#tableset').DataTable({
 
             ajax: {
-                url: `/listDataProduct`,
+                url: `/purchase/detail/listDataPurchase/${purchaseId}`,
                 dataSrc: (json) => {
                     // console.log(json);
                     let nomor=0;
                     json.forEach((row, idx) => {
-
-
                         nomor ++;
                         row.nomor = nomor;
                     });
@@ -243,14 +221,12 @@
             },
             columns:[
                 { data:'nomor', className: 'text-center'},
-                { data:'productName', className: 'text-left'},
-                { data:'dimensions', className: 'text-left'},
-                { data:'categori.categori', className: 'text-center'},
+                { data:'product.productName', className: 'text-left'},
                 { data:'unit.unitName', className: 'text-center'},
-                { data:'qty', className: 'text-center'},
+                { data:'qty', className: 'text-right'},
                 { data:null, className: 'text-right', render: function (data) {
 
-                        let price = 'Rp.'+data.product_price.price;
+                        let price = 'Rp.'+data.price;
 
                         return price;
                     }

@@ -85,7 +85,7 @@ Route::group(['middleware' => 'checkAuthAndRole'], function () {
     Route::post('/updateDataSuppliers', [App\Http\Controllers\C_supplier::class, 'updateDataSuppliers'])->name('updateDataSuppliers');
 
     Route::get('/purchase/detail/{purchaseId}', [App\Http\Controllers\C_purchasedetail::class, 'index'])->name('purchase-detail');
-    Route::get('/purchase/detail/listDataPurchase', [App\Http\Controllers\C_purchasedetail::class, 'listDataPurchase'])->name('detail-listDataPurchase');
+    Route::get('/purchase/detail/listDataPurchase/{purchaseId}', [App\Http\Controllers\C_purchasedetail::class, 'listDataPurchase'])->name('detail-listDataPurchase');
     Route::post('/purchase/detail/addDataPurchase', [App\Http\Controllers\C_purchasedetail::class, 'addDataPurchase'])->name('detail-addDataPurchase');
     Route::post('/purchase/detail/deleteDataPurchase', [App\Http\Controllers\C_purchasedetail::class, 'deleteDataPurchase'])->name('detail-deleteDataPurchase');
     Route::post('/purchase/detail/updateDataPurchase', [App\Http\Controllers\C_purchasedetail::class, 'updateDataPurchase'])->name('detail-updateDataPurchase');
