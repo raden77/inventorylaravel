@@ -16,15 +16,13 @@ if (!function_exists('respons')) {
 if (!function_exists('CheckMenuRole')) {
     function CheckMenuRole($url)
     {
-
+        // dd($url);
         $userdata= session('userdata');
 
         $pageRole= userMenu::with('User:id,name','subMenu:subMenusId,subMenuUrl')
                     ->where('id',$userdata['id'])->get();
 
         $filteredMenu = collect($pageRole)->map(function ($value) use($url) {
-
-
             if($url=='/'.$value->subMenu->subMenuUrl){
                 return $value;
             }else{

@@ -3,74 +3,64 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\unitConversion;
-use App\Models\unit;
+use App\Models\suppliers;
 use Validator;
+use DB;
 
-class C_unitConversion extends Controller
+class C_supplier extends Controller
 {
     public function index(Request $request)
     {
         CheckMenuRole($request->getRequestUri());
 
-        $d['unit']=unit::pluck('unitName','unitId')->all();
-
-        return view('unitconversion.unitconversion',$d);
+        return view('supplier.supplier');
     }
 
-    public function listDataUnitConversion()
+    public function listDataSuppliers()
     {
-        $unitlist=unitConversion::with('fromUnit:unitId,unitName','toUnit:unitId,unitName')
-                    ->get();
+        $list=suppliers::all();
 
-        return response()->json($unitlist);
+        return response()->json($list);
     }
 
-    public function addDataUnitConversion(Request $request)
+    public function addDataSuppliers(Request $request)
     {
         $messages = [
             'required' => 'attribute tidak boleh kosong',
         ];
 
         $validator = Validator::make($request->all(), [
-            "fromUnit"  => "required",
-            "toUnit"    => "required",
-            "ratio"     => "required"
+            "supplierName" => "required",
+            "address" => "required",
         ], $messages);
 
         if ($validator->fails()) {
             return respons(400,  $validator->errors()->all()[0]);
         }
 
-        $unitConversion = new unitConversion;
-
-        $unitConversion->fromUnit = $request->fromUnit;
-        $unitConversion->toUnit = $request->toUnit;
-        $unitConversion->ratio = $request->ratio;
-
-        $unitConversion->save();
-
-        $data=$unitConversion;
+        $data = suppliers::create([
+            'supplierName' => $request->supplierName,
+            'address' => $request->address,
+        ]);
 
         return respons(200,'Data has been saved',$data);
     }
 
-    public function deleteDataUnitConversion(Request $request)
+    public function deleteDataSuppliers(Request $request)
     {
         $messages = [
             'required' => 'attribute tidak boleh kosong',
         ];
 
         $validator = Validator::make($request->all(), [
-            "unitConversionId" => "required",
-
+            "supplierId" => "required",
         ], $messages);
 
         if ($validator->fails()) {
             return respons(400,  $validator->errors()->all()[0]);
         }
 
-        $data = unitConversion::find($request->unitConversionId);
+        $data = suppliers::find($request->supplierId);
 
         if($data){
             $data->delete();
@@ -82,28 +72,26 @@ class C_unitConversion extends Controller
 
     }
 
-    public function updateDataUnitConversion(Request $request)
+    public function updateDataSuppliers(Request $request)
     {
         $messages = [
             'required' => 'attribute tidak boleh kosong',
         ];
 
         $validator = Validator::make($request->all(), [
-            "unitConversionId" => "required",
-            "fromUnit" => "required",
-            "toUnit" => "required",
-            "ratio" => "required",
+            "supplierId" => "required",
+            "supplierName" => "required",
+            "address" => "required",
         ], $messages);
 
         if ($validator->fails()) {
             return respons(400,  $validator->errors()->all()[0]);
         }
 
-        $data = unitConversion::where('unitConversionId', $request->unitConversionId)
+        $data = suppliers::where('supplierId', $request->supplierId)
                 ->update([
-                    'fromUnit' => $request->fromUnit,
-                    'toUnit' => $request->toUnit,
-                    'ratio' => $request->ratio
+                    'supplierName' => $request->supplierName,
+                    'address' => $request->address,
                 ]);
 
         if($data){

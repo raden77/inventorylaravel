@@ -20,7 +20,8 @@ class subMenu extends Model
             'subMenuIcon',
             'subMenuName',
             'subMenuUrl',
-            'menuId'
+            'menuId',
+            'tipeMenu'
     ];
 
     public function menus(): BelongsTo
