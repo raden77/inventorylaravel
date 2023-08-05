@@ -52,7 +52,7 @@
 
                 </div>
                 <hr class="bg-dark">
-                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#productAdd">
+                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#itemAdd">
                     <i class="fa fa-plus"></i>  Add
                 </button>
 
@@ -63,10 +63,10 @@
                                 <thead>
                                     <tr class="text-center bg-primary">
                                         <th class="text-center">No</th>
-                                        <th class="text-center">Nama Product</th>
-                                        <th class="text-center">Satuan</th>
+                                        <th class="text-center">Product</th>
+                                        <th class="text-center">Unit</th>
                                         <th class="text-center">Qty</th>
-                                        <th class="text-center">Harga</th>
+                                        <th class="text-center">Price</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -83,11 +83,11 @@
 
 
         <!-- Modal -->
-        <div class="modal fade" id="productAdd" tabindex="-1" aria-labelledby="productAddLabel" aria-hidden="true">
+        <div class="modal fade" id="itemAdd" tabindex="-1" aria-labelledby="itemAddLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header bg-primary">
-                            <h5 class="modal-title" id="productAddLabel">Add Product</h5>
+                            <h5 class="modal-title" id="itemAddLabel">Add Item</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -96,6 +96,22 @@
                                     <form action="#" id="formadd">
                                         @csrf
 
+                                        <div class="form-group row">
+                                            <div class="col-sm-3">
+                                                <label for="">Product</label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <select name="productId" id="productId"
+                                                    class="form-control select2" >
+                                                    <option value="0" disabled selected>Pilih</option>
+                                                    @forelse ($product as $key=>$item)
+                                                        <option value="{{$key}}">{{$item}}</option>
+                                                    @empty
+                                                        <option value="0" disabled>Data Not Found</option>
+                                                    @endforelse
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div class="form-group row">
                                             <div class="col-sm-3">
                                                 <label for="">Unit</label>
@@ -114,6 +130,14 @@
                                         </div>
                                         <div class="form-group row">
                                             <div class="col-sm-3">
+                                                <label for="">Qty</label>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <input type="number" id="qty" name="qty" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-3">
                                                 <label for="">Price</label>
                                             </div>
                                             <div class="col-sm-5">
@@ -126,7 +150,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success" onclick="addProduct()"> <i class="fa fa-save"></i> Save changes</button>
+                            <button type="button" class="btn btn-success" onclick="addItem()"> <i class="fa fa-save"></i> Save changes</button>
                         </div>
                         </form>
                     </div>
@@ -135,11 +159,11 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="productEdit" tabindex="-1" aria-labelledby="productAddLabel" aria-hidden="true">
+        <div class="modal fade" id="itemEdit" tabindex="-1" aria-labelledby="itemEditLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header bg-primary">
-                        <h5 class="modal-title" id="productAddLabel">Edit Product</h5>
+                        <h5 class="modal-title" id="itemEditLabel">Edit Product</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -147,9 +171,24 @@
                             <div class="col-sm-23">
                                 <form action="#" id="formedit">
                                     @csrf
-                                    <input type="hidden" name="productId" id="productId_e">
-                                    <input type="hidden" name="productPriceId" id="productPriceId_e">
+                                    <input type="hidden" name="purchaseDetailId" id="purchaseDetailId_e">
 
+                                    <div class="form-group row">
+                                        <div class="col-sm-3">
+                                            <label for="">Product</label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <select name="productId" id="productId_e"
+                                                class="form-control select2" >
+                                                <option value="0" disabled selected>Pilih</option>
+                                                @forelse ($product as $key=>$item)
+                                                    <option value="{{$key}}">{{$item}}</option>
+                                                @empty
+                                                    <option value="0" disabled>Data Not Found</option>
+                                                @endforelse
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="form-group row">
                                         <div class="col-sm-3">
                                             <label for="">Unit</label>
@@ -157,7 +196,7 @@
                                         <div class="col-sm-9">
                                             <select name="unitId" id="unitId_e"
                                                 class="form-control select2" >
-                                                <option value="0" disabled>Pilih</option>
+                                                <option value="0" disabled selected>Pilih</option>
                                                 @forelse ($unit as $key=>$item)
                                                     <option value="{{$key}}">{{$item}}</option>
                                                 @empty
@@ -170,7 +209,7 @@
                                         <div class="col-sm-3">
                                             <label for="">Qty</label>
                                         </div>
-                                        <div class="col-sm-5">
+                                        <div class="col-sm-3">
                                             <input type="number" id="qty_e" name="qty" class="form-control">
                                         </div>
                                     </div>
@@ -189,7 +228,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-success" onclick="editProduct()"> <i class="fa fa-save"></i> Save changes</button>
+                        <button type="button" class="btn btn-success" onclick="editItem()"> <i class="fa fa-save"></i> Save changes</button>
                     </div>
                     </form>
                 </div>
@@ -226,7 +265,7 @@
                 { data:'qty', className: 'text-right'},
                 { data:null, className: 'text-right', render: function (data) {
 
-                        let price = 'Rp.'+data.price;
+                        let price = 'Rp.'+data.prices;
 
                         return price;
                     }
@@ -239,7 +278,7 @@
                         tampilBtn += `
                             <button type="button" onclick='showDataEdit(${params})' value=""
                                 class="btn btn-sm btn-warning" > <i class="fa fa-edit"></i> Edit</button>
-                            <button type="button" onclick="deleteProduct(${data.productId})" value="" class="btn btn-sm btn-danger" > <i class="fa fa-trash"></i> Delete</button>
+                            <button type="button" onclick="deleteItem(${data.purchaseDetailId})" value="" class="btn btn-sm btn-danger" > <i class="fa fa-trash"></i> Delete</button>
                         `;
 
                         return tampilBtn;
@@ -258,18 +297,15 @@
 
     function showDataEdit(data)
     {
-        $('#productId_e').val(data.productId);
-        $('#productPriceId_e').val(data.product_price.productPriceId);
-        $('#price_e').val(data.product_price.price);
-        $('#productName_e').val(data.productName);
-        $('#dimension_e').val(data.dimensions);
+        $('#purchaseDetailId_e').val(data.purchaseDetailId);
+        $('#price_e').val(data.prices);
         $('#qty_e').val(data.qty);
-        $('#productCategoriId_e').val(data.productCategoriId).select2().trigger('select');
+        $('#productId_e').val(data.productId).select2().trigger('select');
         $('#unitId_e').val(data.unitId).select2().trigger('select');
-        $('#productEdit').modal('show');
+        $('#itemEdit').modal('show');
     }
 
-    function addProduct()
+    function addItem()
     {
         Swal.fire({
             title: 'Are you sure to save data?',
@@ -286,8 +322,8 @@
                     let formdata=$('#formadd').serialize();
                     $.ajax({
                         type: "POST",
-                        url: "{{url('/addDataProduct')}}",
-                        data: formdata,
+                        url: "{{url('/purchase/detail/addDataPurchase')}}",
+                        data: formdata+'&purchaseId='+purchaseId,
                         dataType: "json",
                         success: function (response) {
 
@@ -298,7 +334,7 @@
                                     'success'
                                 )
                                 formreset()
-                                $('#productAdd').modal('hide');
+                                $('#itemAdd').modal('hide');
                                 table.ajax.reload(null, false);
                             }else{
                                 Swal.fire(
@@ -326,7 +362,7 @@
         })
     }
 
-    function editProduct()
+    function editItem()
     {
         Swal.fire({
             title: 'Are you sure to save data?',
@@ -342,8 +378,8 @@
                     let formdata=$('#formedit').serialize();
                     $.ajax({
                         type: "POST",
-                        url: "{{url('/updateDataProduct')}}",
-                        data: formdata,
+                        url: "{{url('/purchase/detail/updateDataPurchase')}}",
+                        data: formdata+'&purchaseId='+purchaseId,
                         dataType: "json",
                         success: function (response) {
 
@@ -354,7 +390,7 @@
                                     'success'
                                 )
 
-                                $('#productEdit').modal('hide');
+                                $('#itemEdit').modal('hide');
                                 table.ajax.reload(null, false);
                             }else{
                                 Swal.fire(
@@ -382,7 +418,7 @@
         })
     }
 
-    function deleteProduct(productId)
+    function deleteItem(purchaseDetailId)
     {
         Swal.fire({
             title: 'Are you sure to delete data?',
@@ -397,8 +433,8 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "{{url('/deleteDataProduct')}}",
-                        data: {productId},
+                        url: "{{url('/purchase/detail/deleteDataPurchase')}}",
+                        data: {purchaseDetailId},
                         dataType: "json",
                         success: function (response) {
 

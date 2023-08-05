@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\purchaseDetail;
 use App\Models\purchase;
 use App\Models\unit;
+use App\Models\product;
 use Validator;
 use DB;
 
@@ -18,6 +19,7 @@ class C_purchasedetail extends Controller
         $d['purchaseinfo']=purchase::with('supplier:supplierId,supplierName')->find($request->purchaseId);
 
         $d['unit']=unit::pluck('unitName','unitId')->all();
+        $d['product']=product::pluck('productName','productId')->all();
 
         $d['purchaseId']=$request->purchaseId;
 
@@ -43,8 +45,8 @@ class C_purchasedetail extends Controller
             'purchaseId' => "required",
             'productId'  => "required",
             'unitId'     => "required",
-            'prices'     => "required|numeric",
-            'qty '       => "required|numeric",
+            'price'      => "required|numeric",
+            'qty'       => "required|numeric",
         ], $messages);
 
         if ($validator->fails()) {
@@ -57,8 +59,8 @@ class C_purchasedetail extends Controller
                 'purchaseId' => $request->purchaseId,
                 'productId'  => $request->productId,
                 'unitId'     => $request->unitId,
-                'prices'     => $request->prices,
-                'qty '       => $request->qty,
+                'prices'     => $request->price,
+                'qty'        => $request->qty,
             ]);
              // Operasi lainnya...
 
@@ -109,8 +111,8 @@ class C_purchasedetail extends Controller
             'purchaseId'        => "required",
             'productId'         => "required",
             'unitId'            => "required",
-            'prices'            => "required",
-            'qty '              => "required",
+            'price'             => "required",
+            'qty'               => "required",
         ], $messages);
 
         if ($validator->fails()) {
@@ -122,8 +124,8 @@ class C_purchasedetail extends Controller
                     'purchaseId' => $request->purchaseId,
                     'productId'  => $request->productId,
                     'unitId'     => $request->unitId,
-                    'prices'     => $request->prices,
-                    'qty '       => $request->qty,
+                    'prices'     => $request->price,
+                    'qty'       => $request->qty,
                 ]);
 
         if($data){
