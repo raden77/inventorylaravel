@@ -62,7 +62,6 @@ class purchase extends Model
             DB::commit(); // Commit transaksi jika sukses
         } catch (\Exception $e) {
 
-            Log::info($e);
             DB::rollback(); // Rollback transaksi jika terjadi kesalahan
             throw $e;
         }

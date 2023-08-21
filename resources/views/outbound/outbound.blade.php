@@ -2,21 +2,20 @@
 
 @section('content')
     <div class="container-fluid">
-        <h3 class="text-black-50">Purchase Management</h3>
+        <h3 class="text-black-50">Outbound Management</h3>
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#purchaseAdd">
+        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#outboundAdd">
           <i class="fa fa-plus"></i>  Add
         </button>
 
         <div class="row">
             <div class="col-sm-12">
                 <div class="table-responsive">
-                    <table id="tablePurchase" class="table table-hover table-bordered" width="100%" style="font-size: 13px">
+                    <table id="tableset" class="table table-hover table-bordered" width="100%" style="font-size: 13px">
                         <thead>
                             <tr class="text-center bg-primary">
-                                <th class="text-center">No</th>
-                                <th class="text-center">Kode Purchase</th>
-                                <th class="text-center">Supplier</th>
+                                <th class="text-center" width="10">No</th>
+                                <th class="text-center">Kode Outbound</th>
                                 <th class="text-center">Description</th>
                                 <th class="text-center">Status</th>
                                 <th class="text-center">Action</th>
@@ -31,11 +30,11 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="purchaseAdd" tabindex="-1" aria-labelledby="purchaseAddLabel" aria-hidden="true">
+        <div class="modal fade" id="outboundAdd" tabindex="-1" aria-labelledby="outboundAddLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header bg-primary">
-                            <h5 class="modal-title" id="purchaseAddLabel">Add Purchase</h5>
+                            <h5 class="modal-title" id="outboundAddLabel">Add Inbound</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -43,22 +42,7 @@
                                 <div class="col-sm-23">
                                     <form action="#" id="formadd">
                                         @csrf
-                                        <div class="form-group row">
-                                            <div class="col-sm-3">
-                                                <label for="">Supplier</label>
-                                            </div>
-                                            <div class="col-sm-5">
-                                                <select name="supplierId" id="supplierId"
-                                                    class="form-control select2" >
-                                                    <option value="0" disabled selected>Pilih</option>
-                                                    @forelse ($supplier as $key=>$item)
-                                                        <option value="{{$key}}">{{$item}}</option>
-                                                    @empty
-                                                        <option value="0" disabled>Data Not Found</option>
-                                                    @endforelse
-                                                </select>
-                                            </div>
-                                        </div>
+
                                         <div class="form-group row">
                                             <div class="col-sm-3">
                                                 <label for="">Description</label>
@@ -74,7 +58,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success" onclick="addPurchase()"> <i class="fa fa-save"></i> Save changes</button>
+                            <button type="button" class="btn btn-success" onclick="addOutbound()"> <i class="fa fa-save"></i> Save changes</button>
                         </div>
                         </form>
                     </div>
@@ -83,11 +67,11 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="purchaseEdit" tabindex="-1" aria-labelledby="purchaseEditLabel" aria-hidden="true">
+        <div class="modal fade" id="outboundEdit" tabindex="-1" aria-labelledby="outboundEditLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header bg-primary">
-                        <h5 class="modal-title" id="purchaseEditLabel">Edit Purchase</h5>
+                        <h5 class="modal-title" id="outboundEditLabel">Edit outbound</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -95,23 +79,9 @@
                             <div class="col-sm-23">
                                 <form action="#" id="formedit">
                                     @csrf
-                                    <input type="hidden" name="purchaseId" id="purchaseId_e">
-                                    <input type="hidden" name="kodePurchase" id="kodePurchase_e">
-                                    <div class="form-group row">
-                                        <div class="col-sm-3">
-                                            <label for="">Supplier</label>
-                                        </div>
-                                        <div class="col-sm-5">
-                                            <select name="supplierId" id="supplierId_e" class="form-control select2" >
-                                                <option value="0" disabled selected>Pilih</option>
-                                                @forelse ($supplier as $key=>$item)
-                                                    <option value="{{$key}}">{{$item}}</option>
-                                                @empty
-                                                    <option value="0" disabled>Data Not Found</option>
-                                                @endforelse
-                                            </select>
-                                        </div>
-                                    </div>
+                                    <input type="hidden" name="outboundId" id="outboundId_e">
+                                    <input type="hidden" name="kodeOutbound" id="kodeOutbound_e">
+
                                     <div class="form-group row">
                                         <div class="col-sm-3">
                                             <label for="">Description</label>
@@ -127,7 +97,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-success" onclick="editPurchase()"> <i class="fa fa-save"></i> Save changes</button>
+                        <button type="button" class="btn btn-success" onclick="editOutbound()"> <i class="fa fa-save"></i> Save changes</button>
                     </div>
                     </form>
                 </div>
@@ -143,11 +113,10 @@
 
     $(document).ready(function () {
 
-
-        table = $('#tablePurchase').DataTable({
+        table = $('#tableset').DataTable({
 
             ajax: {
-                url: `/listDataPurchase`,
+                url: `/listDataOutbound`,
                 dataSrc: (json) => {
                     // console.log(json);
                     let nomor=0;
@@ -162,8 +131,7 @@
             },
             columns:[
                 { data:'nomor', className: 'text-center'},
-                { data:'kodePurchase', className: 'text-center'},
-                { data:'supplier.supplierName', className: 'text-left'},
+                { data:'kodeOutbound', className: 'text-center'},
                 { data:'description', className: 'text-left'},
                 { data:null, className: 'text-center', render: function (data) {
 
@@ -195,11 +163,11 @@
                                 class="btn btn-sm btn-warning" > <i class="fa fa-edit"></i>
                                 Edit
                             </button>
-                            <button type="button" id="btnDelete" onclick="deletePurchase(${data.purchaseId})" value="" class="btn btn-sm btn-danger" >
+                            <button type="button" id="btnDelete" onclick="deleteOutbound(${data.outboundId})" value="" class="btn btn-sm btn-danger" >
                                 <i class="fa fa-trash"></i>
                                 Delete
                             </button>
-                            <a href="{{url('/purchase/detail/${data.purchaseId}')}}" class="btn btn-sm btn-info">
+                            <a href="{{url('/outbound/detail/${data.outboundId}')}}" class="btn btn-sm btn-info">
                                 <i class="fa fa-eye"></i>
                                 Detail
                             </a>
@@ -212,6 +180,8 @@
 
         });
 
+
+
     });
 
     function formreset()
@@ -221,15 +191,14 @@
 
     function showDataEdit(data)
     {
-        $('#purchaseId_e').val(data.purchaseId);
-        $('#kodePurchase_e').val(data.kodePurchase);
+        $('#outboundId_e').val(data.outboundId);
+        $('#kodeOutbound_e').val(data.kodeOutbound);
         $('#description_e').val(data.description);
-        $('#supplierId_e').val(data.supplierId).select2().trigger('select');
 
-        $('#purchaseEdit').modal('show');
+        $('#outboundEdit').modal('show');
     }
 
-    function addPurchase()
+    function addOutbound()
     {
         Swal.fire({
             title: 'Are you sure to save data?',
@@ -246,7 +215,7 @@
                     let formdata=$('#formadd').serialize();
                     $.ajax({
                         type: "POST",
-                        url: "{{url('/addDataPurchase')}}",
+                        url: "{{url('/addDataOutbound')}}",
                         data: formdata,
                         dataType: "json",
                         success: function (response) {
@@ -258,7 +227,7 @@
                                     'success'
                                 )
                                 formreset()
-                                $('#purchaseAdd').modal('hide');
+                                $('#outboundAdd').modal('hide');
                                 table.ajax.reload(null, false);
                             }else{
                                 Swal.fire(
@@ -286,7 +255,7 @@
         })
     }
 
-    function editPurchase()
+    function editOutbound()
     {
         Swal.fire({
             title: 'Are you sure to save data?',
@@ -302,7 +271,7 @@
                     let formdata=$('#formedit').serialize();
                     $.ajax({
                         type: "POST",
-                        url: "{{url('/updateDataPurchase')}}",
+                        url: "{{url('/updateDataOutbound')}}",
                         data: formdata,
                         dataType: "json",
                         success: function (response) {
@@ -314,7 +283,7 @@
                                     'success'
                                 )
 
-                                $('#purchaseEdit').modal('hide');
+                                $('#outboundEdit').modal('hide');
                                 table.ajax.reload(null, false);
                             }else{
                                 Swal.fire(
@@ -342,7 +311,7 @@
         })
     }
 
-    function deletePurchase(purchaseId)
+    function deleteOutbound(outboundId)
     {
         Swal.fire({
             title: 'Are you sure to delete data?',
@@ -357,8 +326,8 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "{{url('/deleteDataPurchase')}}",
-                        data: {purchaseId},
+                        url: "{{url('/deleteDataOutbound')}}",
+                        data: {outboundId},
                         dataType: "json",
                         success: function (response) {
 

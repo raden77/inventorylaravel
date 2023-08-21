@@ -3,38 +3,39 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\purchaseDetail;
-use App\Models\purchase;
+use App\Models\outbound;
+use App\Models\outboundDetail;
 use App\Models\unit;
 use App\Models\product;
 use Validator;
 use DB;
+use Log;
 
-class C_purchasedetail extends Controller
+class C_outboundetail extends Controller
 {
     public function index(Request $request)
     {
-        CheckMenuRole('/purchase/detail/');
+        CheckMenuRole('/outbound/detail/');
 
-        $d['purchaseinfo']=purchase::with('supplier:supplierId,supplierName')->find($request->purchaseId);
+        $d['outboundInfo']=outbound::find($request->outboundId);
 
         $d['unit']=unit::pluck('unitName','unitId')->all();
         $d['product']=product::pluck('productName','productId')->all();
 
-        $d['purchaseId']=$request->purchaseId;
+        $d['outboundId']=$request->outboundId;
 
-        return view('purchase.purchasedetail',$d);
+        return view('outbound.outboundetail',$d);
     }
 
-    public function listDataPurchase(Request $request)
+    public function listDataOutbound(Request $request)
     {
-        $data=purchaseDetail::with('unit:unitId,unitName','product:productId,productName')
-                ->where('purchaseId',$request->purchaseId)->get();
+        $data=outboundDetail::with('unit:unitId,unitName','product:productId,productName')
+                ->where('outboundId',$request->outboundId)->get();
 
         return response()->json($data);
     }
 
-    public function addDataPurchase(Request $request)
+    public function addDataOutbound(Request $request)
     {
         $messages = [
             'required'  => 'attribute tidak boleh kosong',
@@ -42,7 +43,7 @@ class C_purchasedetail extends Controller
         ];
 
         $validator = Validator::make($request->all(), [
-            'purchaseId' => "required",
+            'outboundId' => "required",
             'productId'  => "required",
             'unitId'     => "required",
             'price'      => "required|numeric",
@@ -50,47 +51,26 @@ class C_purchasedetail extends Controller
         ], $messages);
 
         if ($validator->fails()) {
-            return respons(400,  $validator->errors()->all());
+            return respons(400,  $validator->errors());
         }
 
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
 
             $findProduct = product::find($request->productId)->lockForUpdate()->first();
 
-            $qty=(float)number_format($request->qty, 2);
-            $stokqty=(float)$findProduct->qty;
+            //Update data inbound
+            $data = outboundDetail::create([
+                'outboundId' => $request->outboundId,
+                'productId'  => $request->productId,
+                'unitId'     => $request->unitId,
+                'prices'     => $request->price,
+                'qty'        => $request->qty,
+            ]);
 
-            $cekOnlyOneItem=purchaseDetail::with('product:productId,productName')->where('purchaseId',$request->purchaseId)
-                                                ->where('productId',$request->productId)->get();
+            DB::commit();
+            return respons(200,'Data has been saved',$data);
 
-            if(count($cekOnlyOneItem)>0){
-                return respons(201,'item '.$cekOnlyOneItem[0]->product->productName.' has been added');
-            }
-
-            if($qty>$stokqty)
-            {
-                DB::rollback();
-                return respons(201,'insufficient stock');
-            }else{
-
-                //Update data product
-                $data = purchaseDetail::create([
-                    'purchaseId' => $request->purchaseId,
-                    'productId'  => $request->productId,
-                    'unitId'     => $request->unitId,
-                    'prices'     => $request->price,
-                    'qty'        => $request->qty,
-                ]);
-
-                // $updateQty = product::where('productId', $request->productId)
-                //             ->update([
-                //                 'qty' => ($stokqty-$qty),
-                //             ]);
-
-                DB::commit();
-                return respons(200,'Data has been saved',$data);
-            }
         } catch (\Exception $e) {
             // Tangkap kesalahan jika terjadi dan batalkan transaksi
             DB::rollback();
@@ -100,21 +80,21 @@ class C_purchasedetail extends Controller
 
     }
 
-    public function deleteDataPurchase(Request $request)
+    public function deleteDataOutbound(Request $request)
     {
         $messages = [
             'required' => 'attribute tidak boleh kosong',
         ];
 
         $validator = Validator::make($request->all(), [
-            "purchaseDetailId" => "required",
+            "outboundDetailId" => "required",
         ], $messages);
 
         if ($validator->fails()) {
             return respons(400,  $validator->errors()->all()[0]);
         }
 
-        $data = purchaseDetail::find($request->purchaseDetailId);
+        $data = outboundDetail::find($request->outboundDetailId);
 
         if($data){
             $data->delete();
@@ -126,15 +106,15 @@ class C_purchasedetail extends Controller
 
     }
 
-    public function updateDataPurchase(Request $request)
+    public function updateDataOutbound(Request $request)
     {
         $messages = [
             'required' => 'attribute tidak boleh kosong',
         ];
 
         $validator = Validator::make($request->all(), [
-            'purchaseDetailId'  => "required",
-            'purchaseId'        => "required",
+            'outboundDetailId'  => "required",
+            'outboundId'        => "required",
             'productId'         => "required",
             'unitId'            => "required",
             'price'             => "required",
@@ -145,9 +125,9 @@ class C_purchasedetail extends Controller
             return respons(400,  $validator->errors()->all()[0]);
         }
 
-        $data = purchaseDetail::where('purchaseDetailId', $request->purchaseDetailId)
+        $data = outboundDetail::where('outboundDetailId', $request->outboundDetailId)
                 ->update([
-                    'purchaseId' => $request->purchaseId,
+                    'outboundId' => $request->outboundId,
                     'productId'  => $request->productId,
                     'unitId'     => $request->unitId,
                     'prices'     => $request->price,
@@ -156,6 +136,39 @@ class C_purchasedetail extends Controller
 
         if($data){
             return respons(200,'Data has been updated',$data);
+        }else{
+            return respons(404,'Data not found',$data);
+        }
+
+
+    }
+
+    public function validDataOutbound(Request $request)
+    {
+        $messages = [
+            'required' => 'attribute tidak boleh kosong',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            "outboundDetailId" => "required",
+        ], $messages);
+
+        if ($validator->fails()) {
+            return respons(400,  $validator->errors()->all()[0]);
+        }
+
+        $data = outboundDetail::find($request->outboundDetailId);
+
+        $productfind=product::find($data->productId);
+
+        $qtyOut= $productfind->qty-$data->qty;
+        if($data){
+            $updateqty = product::where('productId',$data->productId)
+                ->update([
+                    'qty'=> $qtyOut,
+                ]);
+
+            return respons(200,'Data has been accepted',$data);
         }else{
             return respons(404,'Data not found',$data);
         }

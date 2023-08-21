@@ -90,6 +90,32 @@ Route::group(['middleware' => 'checkAuthAndRole'], function () {
     Route::post('/purchase/detail/deleteDataPurchase', [App\Http\Controllers\C_purchasedetail::class, 'deleteDataPurchase'])->name('detail-deleteDataPurchase');
     Route::post('/purchase/detail/updateDataPurchase', [App\Http\Controllers\C_purchasedetail::class, 'updateDataPurchase'])->name('detail-updateDataPurchase');
 
+    Route::get('/inbound', [App\Http\Controllers\C_inbound::class, 'index'])->name('inbound');
+    Route::get('/listDataInbound', [App\Http\Controllers\C_inbound::class, 'listDataInbound'])->name('listDataInbound');
+    Route::post('/addDataInbound', [App\Http\Controllers\C_inbound::class, 'addDataInbound'])->name('addDataInbound');
+    Route::post('/deleteDataInbound', [App\Http\Controllers\C_inbound::class, 'deleteDataInbound'])->name('deleteDataInbound');
+    Route::post('/updateDataInbound', [App\Http\Controllers\C_inbound::class, 'updateDataInbound'])->name('updateDataInbound');
+
+    Route::get('/inbound/detail/{inboundId}', [App\Http\Controllers\C_inboundetail::class, 'index'])->name('inbound-detail');
+    Route::get('/inbound/detail/listDataInbound/{inboundId}', [App\Http\Controllers\C_inboundetail::class, 'listDataInbound'])->name('detail-listDataInbound');
+    Route::post('/inbound/detail/addDataInbound', [App\Http\Controllers\C_inboundetail::class, 'addDataInbound'])->name('detail-addDataInbound');
+    Route::post('/inbound/detail/deleteDataInbound', [App\Http\Controllers\C_inboundetail::class, 'deleteDataInbound'])->name('detail-deleteDataInbound');
+    Route::post('/inbound/detail/updateDataInbound', [App\Http\Controllers\C_inboundetail::class, 'updateDataInbound'])->name('detail-updateDataInbound');
+    Route::post('/inbound/detail/validDataInbound', [App\Http\Controllers\C_inboundetail::class, 'validDataInbound'])->name('detail-validDataInbound');
+
+    Route::get('/outbound', [App\Http\Controllers\C_outbound::class, 'index'])->name('outbound');
+    Route::get('/listDataOutbound', [App\Http\Controllers\C_outbound::class, 'listDataOutbound'])->name('listDataOutbound');
+    Route::post('/addDataOutbound', [App\Http\Controllers\C_outbound::class, 'addDataOutbound'])->name('addDataOutbound');
+    Route::post('/deleteDataOutbound', [App\Http\Controllers\C_outbound::class, 'deleteDataOutbound'])->name('deleteDataOutbound');
+    Route::post('/updateDataOutbound', [App\Http\Controllers\C_outbound::class, 'updateDataOutbound'])->name('updateDataOutbound');
+
+    Route::get('/outbound/detail/{outboundId}', [App\Http\Controllers\C_outboundetail::class, 'index'])->name('outbound-detail');
+    Route::get('/outbound/detail/listDataOutbound/{outboundId}', [App\Http\Controllers\C_outboundetail::class, 'listDataOutbound'])->name('detail-listDataOutbound');
+    Route::post('/outbound/detail/addDataOutbound', [App\Http\Controllers\C_outboundetail::class, 'addDataOutbound'])->name('detail-addDataOutbound');
+    Route::post('/outbound/detail/deleteDataOutbound', [App\Http\Controllers\C_outboundetail::class, 'deleteDataOutbound'])->name('detail-deleteDataOutbound');
+    Route::post('/outbound/detail/updateDataOutbound', [App\Http\Controllers\C_outboundetail::class, 'updateDataOutbound'])->name('detail-updateDataOutbound');
+    Route::post('/outbound/detail/validDataOutbound', [App\Http\Controllers\C_outboundetail::class, 'validDataOutbound'])->name('detail-validDataOutbound');
+
 });
 
 
